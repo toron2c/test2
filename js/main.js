@@ -1,3 +1,27 @@
+/// Переведенное задание на промисы
+
+let getRequest = (url) => {
+    return new Promise((resolve, reject) => {
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status !== 200) {
+                    reject('Error');
+                } else {
+                    resolve(xhr.responseText);
+                }
+            }
+        };
+        xhr.send();
+    })
+};
+
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
+
+
 class ProductList {
     #goods;
     #allProducts;
@@ -8,21 +32,17 @@ class ProductList {
         this.#allProducts = [];
         this.#costAll = 0;
 
-        this.#fetchGoods();
-        this.#render();
-        this.#cost();
+        this.#getProducts()
+            .then((data) => {
+                this.#goods = data;
+                this.#render();
+            });
     }
 
-
-
-
-    #fetchGoods() {
-        this.#goods = [
-            {id: 1, title: 'Notebook', price: 20000},
-            {id: 2, title: 'Mouse', price: 1500},
-            {id: 3, title: 'Keyboard', price: 5000},
-            {id: 4, title: 'Gamepad', price: 4500},
-        ];
+    #getProducts() {
+        return fetch(`${API}/catalogData.json`)
+            .then((response) => response.json()).
+            catch((err) => console.log(err));
     }
 
     #render() {
@@ -36,17 +56,15 @@ class ProductList {
         }
     }
     #cost() { // Метод определяющий сумму всех товаров.
-
         this.#goods.forEach( item => this.#costAll += item.price);
-
     }
 }
 
 class ProductItem {
     constructor(product, img = 'https://via.placeholder.com/200x150') {
-        this.title = product.title;
+        this.title = product.product_name;
         this.price = product.price;
-        this.id = product.id;
+        this.id = product.id_product;
         this.img = img;
     }
 
@@ -64,29 +82,32 @@ class ProductItem {
 
 
 
-class BasketList { // Пустой класс с корзиной
+class BasketList {
+
   #goodsInBasket;
   #gds;
-    constructor(container = '.container') {
+    constructor(container = '.basket') {
         this.container = container;
         this.#goodsInBasket = [];
         this.#gds = [];
 
         this.#removeItem();
         this.#addItem();
-        this.#fetchGoods();
-        this.#render();
+
+        this.#getGoodsInBasket().
+            then((data) => {
+                this.#goodsInBasket = data.contents;
+                this.#render();
+        })
 
     }
 
-    #fetchGoods() {
-        this.#goodsInBasket = [
-            {id: 1, title: 'Notebook', price: 20000},
-            {id: 2, title: 'Mouse', price: 1500},
-            {id: 3, title: 'Keyboard', price: 5000},
-            {id: 4, title: 'Gamepad', price: 4500},
-        ];
+    #getGoodsInBasket() {
+        return fetch(`${API}/getBasket.json`)
+            .then((response) => response.json()).
+            catch((err) => console.log(err));
     }
+
 
     #render() {
         const block = document.querySelector(this.container);
@@ -106,6 +127,7 @@ class BasketList { // Пустой класс с корзиной
 class BasketItem extends ProductItem {
   constructor(product, img = 'https://via.placeholder.com/200x150') {
     super(product, img);
+    this.quantity = product.quantity;
   }
 
   render() {
@@ -113,10 +135,12 @@ class BasketItem extends ProductItem {
               <img src="${this.img}" alt="Some img">
               <div class="basket_desc">
                   <h3>${this.title}</h3>
-                  <p>${this.price} \u20bd</p>
-                  <button class="remove_btn">-</button> <p class="quantity"></p> <button class="add_btn">+</button>
+                  <p>Цена: ${this.price} \u20bd</p>
+                 <p class="quantity">Количество: ${this.quantity}</p>
+                 <button class="removeFromBasket">Удалить</button>
               </div>
           </div>`;
   }
 }
 const catalog = new ProductList();
+// const basket = new BasketList();
