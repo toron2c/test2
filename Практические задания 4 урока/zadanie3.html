@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form>
+        <p>Введите ваше имя</p>
+        <input id="name">
+        <p class="nameError" style="font-size: 10px; color: red"></p>
+
+        <p>Введите ваш телефон</p>
+        <input id="tel">
+        <p class="telError" style="font-size: 10px; color: red"></p>
+        <p>Введите ваш email</p>
+        <input id="email">
+         <p class="emailError" style="font-size: 10px; color: red"></p>
+        <p>Введите ваше обращение</p>
+        <textarea id="text"></textarea>
+        <p class="textError" style="font-size: 10px; color: red"></p>
+    <button class="send" type="submit">Отправить</button>
+</form>
+
+<script>
+    'use strict';
+   let btnSend = document.querySelector('.send');
+   let name = document.querySelector('#name');
+   let tel = document.querySelector('#tel');
+   let email = document.querySelector('#email');
+   let textArea = document.querySelector('#text');
+
+   btnSend.addEventListener('click', (e) => {
+       e.preventDefault();
+       validateName(name.value);
+       validateTel(tel.value);
+       validateEmail(email.value);
+       validateText(textArea.value);
+   })
+
+    // Проверка имени
+
+    let validateName = text => {
+       let regName =  new RegExp("^[A-zА-яЁё]+$");
+       if(regName.test(text)){
+           document.querySelector('.nameError').textContent = '';
+           name.style.border = '1px solid black';
+       } else {
+           name.style.border = '2px solid red';
+           document.querySelector('.nameError').textContent = 'Пожалуйста используйте только буквы';
+       }
+    }
+    // Проверка телефона
+    let validateTel = text => {
+       let regTel = /^([+]7[(][0-9]{3}[)][0-9]{3}[-][0-9]{4})$/i;
+       if(regTel.test(text)) {
+           document.querySelector('.telError').textContent = '';
+           tel.style.border = '1px solid black';
+       } else {
+           tel.style.border = '2px solid red';
+           document.querySelector('.telError').textContent = 'Пожалуйста введите телефон в формате  "+7(000)000-0000"';
+       }
+    }
+    // Проверка email
+    let validateEmail = text => {
+       let regEmail = /^([\w.*-]+@(mail\.ru))$/ig;
+        if(regEmail.test(text)) {
+            document.querySelector('.emailError').textContent = '';
+            email.style.border = '1px solid black';
+        } else {
+            email.style.border = '2px solid red';
+            document.querySelector('.emailError').textContent = 'Пожалуйста введите корректный email (mymail@mail.ru / my.mail@mail.ru /my-mail@mail.ru';
+        }
+    }
+    //Проверка текста
+    let validateText = text => {
+       let regText = /^([\w]+)$/ig;
+       if (regText.test(text)) {
+           document.querySelector('.textError').textContent = '';
+           textArea.style.border = '1px solid black';
+       } else {
+           textArea.style.border = '2px solid red';
+           document.querySelector('.textError').textContent = 'Для отправки вам нужно ввести сообщение';
+       }
+    }
+
+</script>
+</body>
+</html>
