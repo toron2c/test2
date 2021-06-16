@@ -7,6 +7,7 @@ header{
     justify-content: space-between;
     color: #fafafa;
     padding: 30px 80px;
+    position: relative;
 }
 button{
     outline: none;
@@ -74,4 +75,40 @@ img {
     background-color: transparent;
     border-color: #2f2a2d;
     color: #2f2a2d;
+}
+.basket {
+    width: 506px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    background: #fafafa;
+}
+.basket_item {
+    height: 75px;
+    display: flex;
+    color: black;
+    margin-bottom: 10px;
+    border: 1px solid black;
+}
+
+.basket_desc {
+    display: flex;
+
+}
+.basket_desc p {
+    margin: 24px 30px 0 25px;
+    font-size: 12px;
+}
+.basket_item img {
+    width: 100px;
+}
+.quantity_btns {
+    display: flex;
+    margin: 24px 5px 20px -20px;
+}
+.quantity_btns button {
+    margin: 5px;
 }
